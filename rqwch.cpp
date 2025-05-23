@@ -13,7 +13,7 @@ using cxd = complex<double>;
 using SparseCMatrix = SparseMatrix<cxd>;
 using CVector = VectorXcd;
 
-// Operador de moneda (Hadamard)
+// Operador de Hadamard
 Matrix2cd coin_operator() {
     Matrix2cd H;
     double inv_sqrt2 = 1.0 / sqrt(2.0);
@@ -31,10 +31,10 @@ SparseCMatrix shift_operator(int size) {
         int up = 2 * pos;
         int down = 2 * pos + 1;
 
-        // ↑  → pos + 1
+        // ↑  + 1
         triplets.emplace_back(up + 2, up, 1.0);
 
-        // ↓  → pos - 1
+        // ↓  - 1
         triplets.emplace_back(down - 2, down, 1.0);
     }
 
@@ -63,11 +63,11 @@ SparseCMatrix coin_tensor_identity(const Matrix2cd &coin, int size) {
     return result;
 }
 
-// Estado inicial:|↑⟩ |0⟩
+// Estado inicial (estado equilibrado)
 CVector initial_state(int size, int center) {
     CVector psi = CVector::Zero(2 * size);
-    psi(2 * center) = 1.0/sqrt(2.0);                  // ↑ en |0>
-    psi(2 * center + 1) = cxd(0.0, 1.0/sqrt(2.0));    // ↓ en |0> con coeficiente i
+    psi(2 * center) = 1.0/sqrt(2.0);                 
+    psi(2 * center + 1) = cxd(0.0, 1.0/sqrt(2.0));    
     return psi;
 }
 
@@ -93,7 +93,7 @@ int main() {
     const vector<int> steps = {10, 100, 1000};
 
     for (int t : steps) {
-        const int size = 2 * t + 1; // máximo alcance ±t
+        const int size = 2 * t + 1; 
         const int center = t;
 
         CVector psi = initial_state(size, center);
